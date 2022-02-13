@@ -1,7 +1,7 @@
 .sidebar-icon {
-  @apply relative flex items-center justify-center 
-  h-[48px] w-[48px] my-[8px] mx-auto  
-bg-gray-200 hover:bg-blue-400 dark:bg-gray-800 
+  @apply relative flex items-center justify-center
+  h-[48px] w-[48px] my-[8px] mx-auto
+bg-gray-200 hover:bg-blue-400 dark:bg-gray-800
 text-blue-500 hover:text-white
 
   hover:rounded-[12px] rounded-[24px]
@@ -10,8 +10,8 @@ text-blue-500 hover:text-white
 }
 
 .active .sidebar-icon {
-  @apply bg-blue-600 text-white
-  rounded-[12px];
+  @apply bg-blue-600 text-white;
+  border-radius: 12px;
 }
 
 .sidebar-tooltip {
@@ -40,7 +40,7 @@ text-blue-500 hover:text-white
   }
 }
 .sidebar-hr {
-  @apply bg-gray-200 dark:bg-gray-800 
+  @apply bg-gray-200 dark:bg-gray-800
   border border-gray-200 dark:border-gray-800 rounded-full
   mx-2;
 }

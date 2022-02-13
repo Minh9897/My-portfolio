@@ -1,13 +1,14 @@
 @import "table";
 @import "scroll-top";
 @import "home";
-@import "sidebar";
 @import "about";
 @import "page-title";
-@import "skills";
 @import "experience";
 @import "projects";
 @import "carousel";
+
+@import "sidebar";
+@import "skills";
 
 @media (max-width: 1280px) {
   html {

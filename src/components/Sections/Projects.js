@@ -81,7 +81,7 @@ function Projects(props) {
               <h2>My Portfolio Website</h2>
               <div className="float-right mr-8">
                 <a
-                  href="https://picsum.photos/640/480?random=3"
+                  href="https://github.com/Minh9897/My-react-portfolio"
                   className="hover:text-orange-600 hover:cursor-pointer underline text-right"
                   target="_blank"
                   rel="noopener noreferrer"

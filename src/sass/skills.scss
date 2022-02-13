@@ -5,9 +5,10 @@
 }
 
 .skills-ul {
-  @apply text-center md:w-[100%] 
+  @apply text-center md:w-[100%]
   leading-[0] flex flex-col md:flex-row md:justify-center;
 }
+
 .skills-ul .item-skill {
   @apply m-[8px] md:m-0;
 }
@@ -20,5 +21,6 @@
 }
 
 .skills-ul span {
-  @apply mt-[4px] font-semibold leading-[1.5];
+  @apply mt-[4px] font-semibold;
+  line-height: 1.5;
 }
