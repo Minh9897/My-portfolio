@@ -2,8 +2,6 @@ import classNames from "classnames";
 import { Carousel } from "react-responsive-carousel";
 import PageTitle from "../Elements/PageTitle";
 
-import ModalElement from "../Elements/ModalElement";
-
 function Projects(props) {
   return (
     <section

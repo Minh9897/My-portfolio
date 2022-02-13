@@ -112,6 +112,7 @@ function Skills(props) {
             icon={
               <object
                 className="pointer-events-none"
+                aria-labelledby="python"
                 data="/Content/images/python.svg"
                 width="46"
                 height="46"
@@ -163,6 +164,7 @@ function Skills(props) {
             icon={
               <object
                 className="pointer-events-none"
+                aria-labelledby="firebase"
                 data="/Content/images/firebase.svg"
                 width="46"
                 height="46"
@@ -176,6 +178,7 @@ function Skills(props) {
             icon={
               <object
                 className="pointer-events-none"
+                aria-labelledby="Jupyter"
                 data="/Content/images/Jupyter.svg"
                 width="46"
                 height="46"

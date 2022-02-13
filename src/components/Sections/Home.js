@@ -29,7 +29,7 @@ const Home = () => {
               <img
                 className="mx-auto"
                 src="/Content/images/Developer-512px-3.gif"
-                alt="Hero Image"
+                alt="Hero"
               />
             </div>
           </div>

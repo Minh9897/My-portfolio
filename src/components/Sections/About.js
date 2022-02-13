@@ -75,7 +75,7 @@ const About = (props) => {
                   }}
                   className="object-cover rounded-[12px]"
                   src="/Content/images/about.jpg"
-                  alt="About Image"
+                  alt="About"
                 />
               </Animator>
               <Animator
