@@ -1,0 +1,267 @@
+diff --git a/node_modules/react-scroll-motion/dist/Animator.d.ts b/node_modules/react-scroll-motion/dist/Animator.d.ts
+index a8d8b6b..c7f3ec6 100644
+--- a/node_modules/react-scroll-motion/dist/Animator.d.ts
++++ b/node_modules/react-scroll-motion/dist/Animator.d.ts
+@@ -3,6 +3,7 @@ import { IAnimation } from "./utils/interface";
+ interface IProp {
+     children: React.ReactNode;
+     animation: IAnimation;
++    className: string | object;
+ }
+-declare const Animator: ({ children, animation }: IProp) => JSX.Element;
++declare const Animator: ({ children, animation, className }: IProp) => JSX.Element;
+ export default Animator;
+diff --git a/node_modules/react-scroll-motion/dist/Animator.js b/node_modules/react-scroll-motion/dist/Animator.js
+index d8c63b0..74f1b1e 100644
+--- a/node_modules/react-scroll-motion/dist/Animator.js
++++ b/node_modules/react-scroll-motion/dist/Animator.js
+@@ -35,6 +35,10 @@ var ScrollContext_1 = require("./ScrollContext");
+ var Animator = function (_a) {
+     var _b, _c;
+     var children = _a.children, _d = _a.animation, animation = _d === void 0 ? {} : _d;
++    var className = _a.className === void 0 ? null : _a.className ;
++    if (typeof(className) === "string") {
++        className = {in:className, out:className}
++    }
+     var _e = react_1.useContext(ScrollContext_1.ScrollContainerContext), currentPage = _e.currentPage, currentProgress = _e.currentProgress;
+     var page = react_1.useContext(ScrollContext_1.ScrollPageContext).page;
+     var filterStyle = function (style) {
+@@ -51,7 +55,12 @@ var Animator = function (_a) {
+     };
+     var calculatedStyle = currentPage === page // for current (out)
+         ? __assign({}, filterStyle((_b = animation === null || animation === void 0 ? void 0 : animation.out) === null || _b === void 0 ? void 0 : _b.style, currentProgress)) : currentPage === page - 1 // for next (in)
+-        ? __assign({}, filterStyle((_c = animation === null || animation === void 0 ? void 0 : animation.in) === null || _c === void 0 ? void 0 : _c.style, currentProgress)) : { display: "none" };
+-    return react_1.default.createElement("div", { style: calculatedStyle }, children);
++        ? __assign({}, filterStyle((_c = animation === null || animation === void 0 ? void 0 : animation.in) === null || _c === void 0 ? void 0 : _c.style, currentProgress)) : {};
++
++    var applyClassName = currentPage === page // for current (out)
++        ? ((className === null || className === void 0) ? null : ((className.out === null || className.out === void 0) ? null : className.out)): currentPage === page - 1 // for next (in)
++        ? ((className === null || className === void 0) ? null : ((className.in === null || className.in === void 0) ? null : className.in)) : null;
++        
++    return react_1.default.createElement("div", { style: calculatedStyle, className: applyClassName }, children);
+ };
+ exports.default = Animator;
+diff --git a/node_modules/react-scroll-motion/dist/ScrollContainer.d.ts b/node_modules/react-scroll-motion/dist/ScrollContainer.d.ts
+index 801b9bb..dcff83d 100644
+--- a/node_modules/react-scroll-motion/dist/ScrollContainer.d.ts
++++ b/node_modules/react-scroll-motion/dist/ScrollContainer.d.ts
+@@ -2,6 +2,8 @@ import React from "react";
+ interface IProps {
+     children: React.ReactNodeArray;
+     scrollParent: Window | HTMLElement;
++    id: string;
++    className: string;
+ }
+-declare const ScrollAnimatorContainer: ({ children, scrollParent }: IProps) => JSX.Element;
++declare const ScrollAnimatorContainer: ({ children, scrollParent, id, className }: IProps) => JSX.Element;
+ export default ScrollAnimatorContainer;
+diff --git a/node_modules/react-scroll-motion/dist/ScrollContainer.js b/node_modules/react-scroll-motion/dist/ScrollContainer.js
+index ebcc16e..d34a67c 100644
+--- a/node_modules/react-scroll-motion/dist/ScrollContainer.js
++++ b/node_modules/react-scroll-motion/dist/ScrollContainer.js
+@@ -27,6 +27,8 @@ var ScrollContext_1 = require("./ScrollContext");
+ var environment_1 = __importDefault(require("./utils/environment"));
+ var ScrollAnimatorContainer = function (_a) {
+     var children = _a.children, _b = _a.scrollParent, scrollParent = _b === void 0 ? window : _b;
++    var id = _a.id === void 0 ? null : _a.id;
++    var className = _a.className === void 0 ? null : _a.className;
+     var _c = react_1.useState({
+         currentY: 0,
+         viewportHeight: 0,
+@@ -56,14 +58,17 @@ var ScrollAnimatorContainer = function (_a) {
+             currentPage: currentPage,
+             currentProgress: currentProgress,
+         });
+-    }, []);
++    }, [scrollParent]);
+     react_1.useEffect(function () {
+         scrollEvent();
+         scrollParent.addEventListener("scroll", scrollEvent);
+-        scrollParent.addEventListener("resize", scrollEvent);
+-        return function () { return scrollParent.removeEventListener("scroll", scrollEvent); };
+-    }, []);
+-    return (react_1.default.createElement("div", { style: { margin: 0, padding: 0, userSelect: "none" } },
++        window.addEventListener("resize", scrollEvent);
++        return function () { 
++            window.removeEventListener("scroll", scrollEvent); 
++            // window.removeEventListener("resize", scrollEvent); 
++        };
++    }, [scrollParent]);
++    return (react_1.default.createElement("div", { style: { margin: 0, padding: 0, userSelect: "none"}, id: id, className: className  },
+         react_1.default.createElement(ScrollContext_1.ScrollContainerContext.Provider, { value: scrollData }, children)));
+ };
+ exports.default = ScrollAnimatorContainer;
+diff --git a/node_modules/react-scroll-motion/dist/ScrollPage.d.ts b/node_modules/react-scroll-motion/dist/ScrollPage.d.ts
+index 79ccd5e..4b4a517 100644
+--- a/node_modules/react-scroll-motion/dist/ScrollPage.d.ts
++++ b/node_modules/react-scroll-motion/dist/ScrollPage.d.ts
+@@ -3,6 +3,10 @@ interface IProps {
+     children: React.ReactNode;
+     page: number;
+     debugBorder: boolean;
++    stickyIn: boolean;
++    stickyOut: boolean;
++    id: string;
++    className: string;
+ }
+-declare const ScrollPage: ({ children, page, debugBorder }: IProps) => JSX.Element;
++declare const ScrollPage: ({ children, page, debugBorder, id, className}: IProps) => JSX.Element;
+ export default ScrollPage;
+diff --git a/node_modules/react-scroll-motion/dist/ScrollPage.js b/node_modules/react-scroll-motion/dist/ScrollPage.js
+index e646bd9..6b42c76 100644
+--- a/node_modules/react-scroll-motion/dist/ScrollPage.js
++++ b/node_modules/react-scroll-motion/dist/ScrollPage.js
+@@ -34,9 +34,18 @@ var react_1 = __importStar(require("react"));
+ var ScrollContext_1 = require("./ScrollContext");
+ var ScrollPage = function (_a) {
+     var children = _a.children, page = _a.page, _b = _a.debugBorder, debugBorder = _b === void 0 ? false : _b;
+-    var viewportHeight = react_1.useContext(ScrollContext_1.ScrollContainerContext).viewportHeight;
+-    var style = __assign({ margin: 0, padding: 0, height: viewportHeight, position: "relative", boxSizing: "border-box", scrollSnapAlign: "center", overflow: "hidden" }, (debugBorder ? { border: "1px solid red" } : {}));
+-    return (react_1.default.createElement("div", { style: style },
++    var stickyIn = _a.stickyIn === void 0 ? false : _a.stickyIn ;
++    var stickyOut = _a.stickyOut === void 0 ? false : _a.stickyOut ;
++    var id = _a.id === void 0 ? null : _a.id ;
++    var className = _a.className === void 0 ? null : _a.className ;
++    var _e = react_1.useContext(ScrollContext_1.ScrollContainerContext), currentPage = _e.currentPage, currentProgress =_e.currentProgress
++
++    var sticky= currentPage === page // for current (out)
++    ? ((stickyOut && currentProgress!==0) ? {position:"sticky",top:0} : {position:"relative"}) : currentPage === page - 1 // for next (in)
++    ? ((stickyIn && currentProgress!==0) ? {position:"sticky",bottom:0} : {position:"relative"}): { position:"relative" };
++
++    var style = __assign({ ...sticky, margin: 0, padding: 0, height: '100vh', overflow: "hidden" }, (debugBorder ? { border: "1px solid red" } : {}));
++    return (react_1.default.createElement("div", { style: style, id: id, className: className },
+         react_1.default.createElement(ScrollContext_1.ScrollPageContext.Provider, { value: { page: page } }, children)));
+ };
+ exports.default = ScrollPage;
+diff --git a/node_modules/react-scroll-motion/dist/animations/StickyAnimation.d.ts b/node_modules/react-scroll-motion/dist/animations/StickyAnimation.d.ts
+index c1eebb0..0c08850 100644
+--- a/node_modules/react-scroll-motion/dist/animations/StickyAnimation.d.ts
++++ b/node_modules/react-scroll-motion/dist/animations/StickyAnimation.d.ts
+@@ -1,4 +1,4 @@
+-export declare const Sticky: (left?: number, top?: number) => {
++export declare const Sticky: (left?: number | string, top?: number | string) => {
+     in: {
+         style: {
+             left: () => string;
+@@ -16,7 +16,7 @@ export declare const Sticky: (left?: number, top?: number) => {
+         };
+     };
+ };
+-export declare const StickyIn: (left?: number, top?: number) => {
++export declare const StickyIn: (left?: number | string, top?: number | string) => {
+     in: {
+         style: {
+             left: () => string;
+@@ -34,7 +34,7 @@ export declare const StickyIn: (left?: number, top?: number) => {
+         };
+     };
+ };
+-export declare const StickyOut: (left?: number, top?: number) => {
++export declare const StickyOut: (left?: number | string, top?: number | string) => {
+     in: {
+         style: {
+             left: string;
+diff --git a/node_modules/react-scroll-motion/dist/animations/StickyAnimation.js b/node_modules/react-scroll-motion/dist/animations/StickyAnimation.js
+index 8643940..77f432e 100644
+--- a/node_modules/react-scroll-motion/dist/animations/StickyAnimation.js
++++ b/node_modules/react-scroll-motion/dist/animations/StickyAnimation.js
+@@ -7,22 +7,26 @@ exports.StickyOut = exports.StickyIn = exports.Sticky = void 0;
+ var environment_1 = __importDefault(require("../utils/environment"));
+ var Sticky = function (left, top) {
+     if (left === void 0) { left = 50; }
+-    if (top === void 0) { top = 50; }
++    if (top === void 0) { top = "0px"; }
+     return ({
+         in: {
+             style: {
+-                left: function () { return (left * environment_1.default.width) / 100 + "px"; },
+-                top: function () { return (top * environment_1.default.height) / 100 + "px"; },
+-                transform: "translate(-50%, -50%)",
+-                position: "fixed",
++                // left: function () { return (left * environment_1.default.width) / 100 + "px"; },
++                // top: function () { return (top * environment_1.default.height) / 100 + "px"; },
++                // transform: "translate(-50%, -50%)",
++                // position: "fixed",
++                top:function(value) { return `calc(${-environment_1.default.height}px*(${1-value}) + ${top})`},
++                position: "absolute",
+             },
+         },
+         out: {
+             style: {
+-                left: function () { return (left * environment_1.default.width) / 100 + "px"; },
+-                top: function () { return (top * environment_1.default.height) / 100 + "px"; },
+-                transform: "translate(-50%, -50%)",
+-                position: "fixed",
++                // left: function () { return (left * environment_1.default.width) / 100 + "px"; },
++                // top: function () { return (top * environment_1.default.height) / 100 + "px"; },
++                // transform: "translate(-50%, -50%)",
++                // position: "fixed",
++                top: function(value) { return `calc(${environment_1.default.height}px*${value} + ${top})`},
++                position: "absolute",
+             },
+         },
+     });
+@@ -30,21 +34,23 @@ var Sticky = function (left, top) {
+ exports.Sticky = Sticky;
+ var StickyIn = function (left, top) {
+     if (left === void 0) { left = 50; }
+-    if (top === void 0) { top = 50; }
++    if (top === void 0) { top = "0px"; }
+     return ({
+         in: {
+             style: {
+-                left: function () { return (left * environment_1.default.width) / 100 + "px"; },
+-                top: function () { return (top * environment_1.default.height) / 100 + "px"; },
+-                transform: "translate(-50%, -50%)",
+-                position: "fixed",
++                // left: function () { return (left * environment_1.default.width) / 100 + "px"; },
++                // top: function () { return (top * environment_1.default.height) / 100 + "px"; },
++                // transform: "translate(-50%, -50%)",
++                top:function(value) { return `calc(${-environment_1.default.height}px*(${1-value}) + ${top})`},
++                position: "absolute",
+             },
+         },
+         out: {
+             style: {
+-                left: function () { return (left * environment_1.default.width) / 100 + "px"; },
+-                top: function () { return (top * environment_1.default.height) / 100 + "px"; },
+-                transform: "translate(-50%, -50%)",
++                // left: function () { return (left * environment_1.default.width) / 100 + "px"; },
++                // top: function () { return (top * environment_1.default.height) / 100 + "px"; },
++                // transform: "translate(-50%, -50%)",
++                top: top,
+                 position: "absolute",
+             },
+         },
+@@ -53,22 +59,23 @@ var StickyIn = function (left, top) {
+ exports.StickyIn = StickyIn;
+ var StickyOut = function (left, top) {
+     if (left === void 0) { left = 50; }
+-    if (top === void 0) { top = 50; }
++    if (top === void 0) { top = "0px"; }
+     return ({
+         in: {
+             style: {
+-                left: (left * environment_1.default.width) / 100 + "px",
+-                top: (top * environment_1.default.height) / 100 + "px",
+-                transform: "translate(-50%, -50%)",
++                // left: (left * environment_1.default.width) / 100 + "px",
++                // top: (top * environment_1.default.height) / 100 + "px",
++                top:top,
+                 position: "absolute",
+             },
+         },
+         out: {
+             style: {
+-                left: (left * environment_1.default.width) / 100 + "px",
+-                top: (top * environment_1.default.height) / 100 + "px",
+-                transform: "translate(-50%, -50%)",
+-                position: "fixed",
++                // left: (left * environment_1.default.width) / 100 + "px",
++                // top: (top * environment_1.default.height) / 100 + "px",
++                // top: function(value) { return `calc(${environment_1.default.height}px*${value}+${top})`},
++                top: function(value) { return `calc(${environment_1.default.height}px*${value} + ${top})`},
++                position: "absolute",
+             },
+         },
+     });

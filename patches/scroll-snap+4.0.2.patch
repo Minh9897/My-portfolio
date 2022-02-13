@@ -1,0 +1,39 @@
+diff --git a/node_modules/scroll-snap/dist/esm/index.d.ts b/node_modules/scroll-snap/dist/esm/index.d.ts
+index 1214e12..bda6937 100644
+--- a/node_modules/scroll-snap/dist/esm/index.d.ts
++++ b/node_modules/scroll-snap/dist/esm/index.d.ts
+@@ -1,4 +1,5 @@
+ interface Settings {
++    delay?: number;
+     /**
+      * snap-destination for x and y axes
+      * should be a valid css value expressed as px|%|vw|vh
+diff --git a/node_modules/scroll-snap/dist/esm/index.js b/node_modules/scroll-snap/dist/esm/index.js
+index 5f57d5f..8a1a369 100644
+--- a/node_modules/scroll-snap/dist/esm/index.js
++++ b/node_modules/scroll-snap/dist/esm/index.js
+@@ -6,6 +6,7 @@ var TIMEOUT_DEFAULT = 100;
+ var DURATION_DEFAULT = 300;
+ var THRESHOLD_DEFAULT = 0.2;
+ var SNAPSTOP_DEFAULT = false;
++var DELAY_DEFAULT = 100
+ var EASING_DEFAULT = easeInOutQuad;
+ var NOOP = function () { };
+ export default function createScrollSnap(element, settings, callback) {
+@@ -58,6 +59,7 @@ export default function createScrollSnap(element, settings, callback) {
+         throw new Error("Optional settings property 'snapStop' is not valid, expected BOOLEAN but found " + (typeof settings.snapStop).toUpperCase());
+     }
+     var snapStop = settings.snapStop || SNAPSTOP_DEFAULT;
++    var delay = settings.delay || DELAY_DEFAULT;
+     function checkScrollSpeed(value, axis) {
+         var clear = function () {
+             lastScrollValue[axis] = null;
+@@ -313,7 +315,7 @@ export default function createScrollSnap(element, settings, callback) {
+             var elapsed = timestamp - startTime;
+             // change position on y-axis if result is a number.
+             if (!isNaN(end.y)) {
+-                obj.scrollTop = position(start.y, end.y, elapsed, period);
++                setTimeout(function() {obj.scrollTop = position(start.y, end.y, elapsed, period)},delay);
+             }
+             // change position on x-axis if result is a number.
+             if (!isNaN(end.x)) {

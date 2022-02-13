@@ -1,0 +1,25 @@
+.about {
+  @apply flex flex-col items-center;
+  position: relative;
+  height: 100vh;
+}
+
+.btnAbout {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.detail {
+  background: linear-gradient(
+    134deg,
+    rgb(96, 161, 235) 0%,
+    rgb(36, 130, 218) 35%,
+    rgb(29 78 216) 50%,
+    rgb(36, 39, 218) 65%,
+    rgb(96, 98, 235) 100%
+  );
+}

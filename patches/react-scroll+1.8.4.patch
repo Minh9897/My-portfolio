@@ -1,0 +1,20 @@
+diff --git a/node_modules/react-scroll/modules/mixins/animate-scroll.js b/node_modules/react-scroll/modules/mixins/animate-scroll.js
+index 1209574..e7927cb 100644
+--- a/node_modules/react-scroll/modules/mixins/animate-scroll.js
++++ b/node_modules/react-scroll/modules/mixins/animate-scroll.js
+@@ -148,13 +148,13 @@ var animateScroll = function animateScroll(easing, options, timestamp) {
+     if (options.horizontal) {
+       data.containerElement.scrollLeft = data.currentPosition;
+     } else {
+-      data.containerElement.scrollTop = data.currentPosition;
++      setTimeout(function() {data.containerElement.scrollTop = data.currentPosition},10);
+     }
+   } else {
+     if (options.horizontal) {
+       window.scrollTo(data.currentPosition, 0);
+     } else {
+-      window.scrollTo(0, data.currentPosition);
++      setTimeout(function() {window.scrollTo(0, data.currentPosition)},10);
+     }
+   }
+ 

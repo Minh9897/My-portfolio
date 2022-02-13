@@ -1,0 +1,63 @@
+diff --git a/node_modules/react-responsive-carousel/lib/js/components/Carousel/index.js b/node_modules/react-responsive-carousel/lib/js/components/Carousel/index.js
+index 6f5ca21..2e464ea 100644
+--- a/node_modules/react-responsive-carousel/lib/js/components/Carousel/index.js
++++ b/node_modules/react-responsive-carousel/lib/js/components/Carousel/index.js
+@@ -678,7 +678,8 @@ var Carousel = /*#__PURE__*/function (_React$Component) {
+         onSwipeMove: this.onSwipeMove,
+         onSwipeStart: this.onSwipeStart,
+         onSwipeEnd: this.onSwipeEnd,
+-        style: this.state.itemListStyle,
++        // style: {},
++        style: {...this.state.itemListStyle},
+         tolerance: this.props.swipeScrollTolerance
+       };
+       var containerStyles = {};
+@@ -688,7 +689,8 @@ var Carousel = /*#__PURE__*/function (_React$Component) {
+         swiperProps.onSwipeRight = this.onSwipeBackwards;
+ 
+         if (this.props.dynamicHeight) {
+-          var itemHeight = this.getVariableItemHeight(this.state.selectedItem); // swiperProps.style.height = itemHeight || 'auto';
++          var itemHeight = this.getVariableItemHeight(this.state.selectedItem); 
++          swiperProps.style.height = itemHeight || 'auto';
+ 
+           containerStyles.height = itemHeight || 'auto';
+         }
+@@ -706,12 +708,13 @@ var Carousel = /*#__PURE__*/function (_React$Component) {
+         className: _cssClasses.default.ROOT(this.props.className),
+         ref: this.setCarouselWrapperRef,
+         tabIndex: this.props.useKeyboardArrows ? 0 : undefined
+-      }, /*#__PURE__*/_react.default.createElement("div", {
++      }, this.renderThumbs(),
++      /*#__PURE__*/_react.default.createElement("div", {
+         className: _cssClasses.default.CAROUSEL(true),
+         style: {
+           width: this.props.width
+         }
+-      }, this.renderControls(), this.props.renderArrowPrev(this.onClickPrev, hasPrev, this.props.labels.leftArrow), /*#__PURE__*/_react.default.createElement("div", {
++      }, this.props.renderArrowPrev(this.onClickPrev, hasPrev, this.props.labels.leftArrow), /*#__PURE__*/_react.default.createElement("div", {
+         className: _cssClasses.default.WRAPPER(true, this.props.axis),
+         style: containerStyles
+       }, isSwipeable ? /*#__PURE__*/_react.default.createElement(_reactEasySwipe.default, _extends({
+@@ -725,7 +728,8 @@ var Carousel = /*#__PURE__*/function (_React$Component) {
+           return _this5.setListRef(node);
+         },
+         style: this.state.itemListStyle || {}
+-      }, this.props.infiniteLoop && lastClone, this.renderItems(), this.props.infiniteLoop && firstClone)), this.props.renderArrowNext(this.onClickNext, hasNext, this.props.labels.rightArrow), this.renderStatus()), this.renderThumbs());
++      }, this.props.infiniteLoop && lastClone, this.renderItems(), this.props.infiniteLoop && firstClone)), this.props.renderArrowNext(this.onClickNext, hasNext, this.props.labels.rightArrow), 
++      this.renderStatus()), this.renderControls());
+     }
+   }]);
+ 
+diff --git a/node_modules/react-responsive-carousel/lib/js/cssClasses.js b/node_modules/react-responsive-carousel/lib/js/cssClasses.js
+index d96e772..dafe789 100644
+--- a/node_modules/react-responsive-carousel/lib/js/cssClasses.js
++++ b/node_modules/react-responsive-carousel/lib/js/cssClasses.js
+@@ -14,7 +14,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
+ var _default = {
+   ROOT: function ROOT(customClassName) {
+     return (0, _classnames.default)(_defineProperty({
+-      'carousel-root': true
++      'carousel-root': true,
+     }, customClassName || '', !!customClassName));
+   },
+   CAROUSEL: function CAROUSEL(isSlider) {
