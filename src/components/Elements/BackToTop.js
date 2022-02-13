@@ -6,8 +6,8 @@ import { Transition } from "react-transition-group";
 
 const scrollToTop = () => {
   scroll.scrollToTop({
-    smooth: "easeInOutCube",
     duration: 1000,
+    smooth: "easeInOutCube",
     containerId: "snapContainer",
   });
 };
